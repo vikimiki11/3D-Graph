@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>3D Graph</title>
+		<meta charset="UTF-8">
+		<style>
+			body{
+				margin: 0;
+			}
+			svg, div{
+				display: inline-block;
+			}
+			div{
+				height: 930px;
+				width: 210px;
+				background-color: lightgray;
+				border: 1px black solid;
+				box-sizing: border-box;
+				position: absolute;
+				top: 0;
+			}
+			input,textarea,h1,h2,button{
+				margin: 10px;
+				width: 180px;
+			}
+		</style>
+	</head>
+	<body>
+		<svg width="1500" height="930"></svg>
+		<div>
+			<h1>Super Grapher</h1>
+			<h2>Expression:</h2>
+			<textarea placeholder="atan(x/y)">atan(x/y)</textarea>
+			<h2>X range:</h2>
+			<input id="x" placeholder="-50,50" value="-50,50">
+			<h2>Y range:</h2>
+			<input id="y" placeholder="-50,50" value="-50,50">
+			<h2>Resolution:</h2>
+			<input type="range" min="10" max="100" value="55" id="slider">
+			<button onclick="start()">Draw</button>
+			<script src="cal.js"></script>
+			<script src="graph.js"></script>
+			<script>
+				function start(){
+					let ranges=[parseFloat(document.querySelector("#x").value.split(",")[0]),parseFloat(document.querySelector("#x").value.split(",")[1]),parseFloat(document.querySelector("#y").value.split(",")[0]),parseFloat(document.querySelector("#y").value.split(",")[1])]
+					makemetrix(document.querySelector("textarea").value,ranges,parseInt(document.querySelector("#slider").value))
+				}
+				prepare(document.querySelector("svg"))
+			</script>
+		</div>
+	</body>
+</html>
