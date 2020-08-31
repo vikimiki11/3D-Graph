@@ -7,27 +7,34 @@
 			body{
 				margin: 0;
 			}
-			svg, div{
+			div{
 				display: inline-block;
 			}
-			div{
+			#menu{
+				position: relative;
+				float: right;
 				height: 930px;
 				width: 210px;
 				background-color: lightgray;
 				border: 1px black solid;
 				box-sizing: border-box;
-				position: absolute;
+				position: relative;
 				top: 0;
 			}
 			input,textarea,h1,h2,button{
 				margin: 10px;
 				width: 180px;
 			}
+			p{
+				margin: 10px;
+			}
 		</style>
 	</head>
 	<body>
-		<svg width="1500" height="930"></svg>
-		<div>
+		<div id="Grapher">
+			<svg width="1650" height="930"></svg>
+		</div>
+		<div id="menu">
 			<h1>Super Grapher</h1>
 			<h2>Expression:</h2>
 			<textarea placeholder="atan(x/y)">atan(x/y)</textarea>
@@ -38,6 +45,8 @@
 			<h2>Resolution:</h2>
 			<input type="range" min="10" max="100" value="55" id="slider">
 			<button onclick="start()">Draw</button>
+			<h2>Working functions</h2>
+			<p>1e+3=1000<br>2**10=1024<br>PI=3.141592653589793<br>Sin()<br>Cos()<br>Tan()<br>aSin(): arc sin<br>aCos(): arc cos<br>aTan(): arc tan<br>DtR(): Degrees to radians<br>RtD(): Radians to degrees</p>
 			<script src="cal.js"></script>
 			<script src="graph.js"></script>
 			<script>
@@ -45,7 +54,7 @@
 					let ranges=[parseFloat(document.querySelector("#x").value.split(",")[0]),parseFloat(document.querySelector("#x").value.split(",")[1]),parseFloat(document.querySelector("#y").value.split(",")[0]),parseFloat(document.querySelector("#y").value.split(",")[1])]
 					makemetrix(document.querySelector("textarea").value,ranges,parseInt(document.querySelector("#slider").value))
 				}
-				prepare(document.querySelector("svg"))
+				prepare("#Grapher")
 			</script>
 		</div>
 	</body>
