@@ -4,7 +4,6 @@ brackets={
 	"{":false,
 	"}":true
 }
-//Sin()<br>Cos()<br>Tan()<br>aSin()<br>aCos()<br>aTan()<br>DtR()<br>RtD()
 function calc(input,ignore,depth){
 	if(depth==undefined){
 		depth=1
