@@ -12,7 +12,7 @@ var res=undefined
 var zangle=0.001
 var xangle=0.001
 var tick=1000/45
-var camdist=125
+var camdist=100
 var range
 var width
 var height
@@ -50,50 +50,57 @@ function makemetrix(expression,ranges,resolution){
 function draw() {
 	width=svg.children[0].width.animVal.value
 	height=svg.children[0].height.animVal.value
-	short=width<height?width:height
-	console.log(metrix)
+	short=width<height?width/2:height/2
+	width=width/2
+	height=height/4*3
 	if(zangle>90){
 		starty=0
 		jy=1
-		stopy=res-2
+		stopy=res-1
 	}else{
-		starty=res-2
+		starty=res-1
 		jy=-1
 		stopy=0
 	}
 	if(zangle>0){
 		startx=0
 		jx=1
-		stopx=res-2
+		stopx=res-1
 	}else{
-		startx=res-2
+		startx=res-1
 		jx=-1
 		stopx=0
 	}
 	zapis=""
 	for(x=startx;x!=stopx;x+=jx){
 		for(y=starty;y!=stopy;y+=jy){
-			zapis+='<polygon points="'+shadow(x,y,metrix[x][y])+' '+shadow(x,y+1,metrix[x][y+1])+' '+shadow(x+1,y+1,metrix[x+1][y+1])+' '+shadow(x+1,y,metrix[x+1][y])+'" style="fill:hsl('+(300*((metrix[x][y]-min)/(max-min)))+', 100%, 50%);stroke:grey;stroke-width:1;" onmouseover="show('+x+','+y+')"></polygon>'
+			zapis+='<polygon points="'+shadow(x,y,metrix[x][y])+' '+shadow(x,y+1,metrix[x][y+1])+' '+shadow(x+1,y+1,metrix[x+1][y+1])+' '+shadow(x+1,y,metrix[x+1][y])+'" style="fill:hsl('+(300*((metrix[x][y]-min)/(max-min)))+', 100%, 50%);" onmouseover="show('+x+','+y+')"></polygon>'//stroke:grey;stroke-width:1;
 		}
 	}
 	svg.children[0].innerHTML=zapis
 }
 function shadow(x,y,z) {//calculate position of node
-	xdif=(x-res/2)-camx
-	ydif=(y-res/2)-camy
-	zdif=((z-min)/(max-min)*res)-camz
-	xdeggre=((Math.atan(ydif/xdif)*-1*xdif/Math.abs(xdif))*xdif/Math.abs(xdif))/Math.PI*180-zangle
+	xdif=camx-(x-res/2)
+	ydif=camy-(y-res/2)
+	zdif=camz-((min-z+0.00001)/(min-max+0.00001)*res)
+	xdeggre=(((Math.atan(ydif/xdif)*-1*xdif/Math.abs(xdif)+Math.PI/2)*xdif/Math.abs(xdif))/Math.PI*180-zangle)/res*150
 	xydif=Math.sqrt(xdif**2+ydif**2)
-	ydeggre=((Math.atan(xydif/zdif)*-1*zdif/Math.abs(zdif))*zdif/Math.abs(zdif))/Math.PI*180-xangle
-	return [xdeggre/fov*width/2+width/2,ydeggre/fov*width/2+width/2]
+	ydeggre=(((Math.atan(xydif/zdif)*-1*zdif/Math.abs(zdif)+Math.PI/2)*zdif/Math.abs(zdif))/Math.PI*180-xangle)/res*150
+	lx=(xdeggre/fov*short+width==NaN)?lx:xdeggre/fov*short+width
+	ly=(ydeggre/fov*short+height==NaN)?ly:ydeggre/fov*short+height
+	if(lx>1600 || lx<0 || ly>1600 || ly<0){
+		console.error("FUCK "+lx+" , "+ly)
+	}
+	return [lx,ly]
 }
 function camera(){//change position of camera
 	camx=Math.sin(dtr(zangle))*camdist*Math.cos(dtr(xangle))
 	camy=Math.cos(dtr(zangle))*camdist*Math.cos(dtr(xangle))
 	camz=Math.sin(dtr(xangle))*camdist
 	check=Math.sqrt(camx*camx+camy*camy+camz*camz)
+	draw()
 }
-setInterval(function(){requestAnimationFrame(draw)},1000)
+//setInterval(function(){requestAnimationFrame(draw)},1000)
 function show(x,y) {//show value of node mouse is hovering on
 	document.querySelector(".show").innerHTML="Vstup: x="+(range[0]+xjump*x)+" y="+(range[2]+yjump*y)+"<br>Výstup: "+metrix[x][y]
 }
@@ -149,3 +156,10 @@ function prepare(){
 	})
 }
 camera()
+function Testus(){
+	shadow(Math.floor(res/2),Math.floor(res/2),metrix[Math.floor(res/2)][Math.floor(res/2)])
+	shadow(0,0,metrix[0][0])
+	shadow(0,res-1,metrix[0][res-1])
+	shadow(res-1,0,metrix[res-1][0])
+	shadow(res-1,res-1,metrix[res-1][res-1])
+}
